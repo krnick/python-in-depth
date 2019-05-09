@@ -125,3 +125,52 @@ k
 """
 
 ```
+
+## 那麼什麼時候可以用到協程呢
+
+
+* 大量網路IO
+* 大量硬碟IO
+
+可以透過暫停的技巧，讓我們開始做一個 IO時，就讓程式暫停一下，我們可以就去做其他事情。
+
+1. 協程是在一個行程裡面做程式流的切換
+2. 不需要 Lock 的機制
+3. 實現容易
+
+## 用法
+
+```yield from``` 加上可迭代物件或是迭代器，生成器，yield from 後的結果會產生一個產生器。
+
+例如字串：
+
+```python
+string_obj = "Nick"
+
+list_obj = ["N", "i", "c", "k"]
+
+dict_obj = {"name": "Nick", "age": 24, "hobby": "computer"}
+
+generator_obj = (i for i in range(0, 5))
+
+
+def yield_from(args):
+    yield from args
+
+
+result = yield_from(generator_obj)
+
+print(next(result))
+print(next(result))
+print(next(result))
+```
+
+透過 ```yield from``` 代替單獨的```yield```，可以讓程式變得更加優雅，且 ```yield from``` 在例外捕捉的部份做的相當多，因此若我們只有使用 ```yield``` 需要自己去做這些額外的例外捕捉。
+
+## ```yield from``` 實際用法
+
+通常會依靠三個概念
+
+1. 子生成器 (放在代理生成器後面的函數)
+2. 代理生成器 (做雙向溝通)
+3. 調用者 (做 ```send``` 資料和接收 ```yield``` 回來的參數)
